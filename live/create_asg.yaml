@@ -7,9 +7,11 @@
   tasks:
      - name: create target group
        elb_target_group:
-          name: M5-ig-tg
-          protocol: http
+          name: M5igtg
+          protocol: tcp
           port: 80
+          stickiness_enabled: no
+          stickiness_type: source_ip
           vpc_id: "{{ vpc.vpc.id }}"
           unhealthy_threshold_count: 3
           healthy_threshold_count: 3
@@ -27,31 +29,33 @@
              Name: M5-ig-asg-server
           iam_instance_profile: image-gallery-server-role
        register: ig_lt
-     - name: Create network load balancer
+     - name: allocate a new elastic IP without associating it to anything
+       ec2_eip:
+          state: present
+       register: eip1
+     - name: allocate a new elastic IP without associating it to anything
+       ec2_eip:
+          state: present
+       register: eip2
+     - name: create network load balancer
        elb_network_lb:
           name: M5-ig-nlb
-          subnets: 
-             - "{{ M5_ig_private-1.subnet.id }}"
-             - "{{ M5_ig_private-2.subnet.id }}"
-          listeners: 
+          subnet_mappings:
+             - SubnetId: "{{ M5_ig_private_1.subnet.id }}"
+               AllocationId: "{{ eip1.allocation_id }}"
+             - SubnetId: "{{ M5_ig_private_2.subnet.id }}"
+               AllocationId: "{{ eip2.allocation_id }}"
+          listeners:
              - Protocol: TCP
                Port: 80
+               DefaultActions:
+                  - Type: forward
+                    TargetGroupName: "{{ M5_ig_tg.target_group_name }}"
              - Protocol: TLS
                Port: 443
-               DefaultActions: 
+               Certificates:
+                  - CertificatesArn: "c5dcc56b-263d-4e71-a3b4-17356ade1b52"
+               DefaultActions:
                   - Type: forward
-                    TargetGroupName: "{{ M5_ig_tg }}"
-          state: present 
-     - name: create autoscaling group
-       ec2_asg:
-          name: M5-ig-asg
-          launch_template:
-             version: 'Latest'
-             launch_template_name: 'ig-lt'
-          min_size: 2
-          max_size: 4
-          desired_capacity: 2
-          vpc_zone_identifier: "{{ M5_ig_public_1.subnet.id }},{{ M5_ig_public_2.subnet.id }}"
-
-
-
+                    TargetGroupName: "{{ M5_ig_tg.target_group_name }}"
+          state: present
