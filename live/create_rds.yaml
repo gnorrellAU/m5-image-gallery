@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  gather_facts: no
+  module_defaults:
+     group/aws:
+       region: "us-east-1"
+  tasks:
+     - name: Create RDS subnet
+       rds_subnet_group:
+          state: present
+          name: M5-ig-private-dbgrp
+          description: Subnet for RDS using private subnets
+          subnets: 
+             - "{{ M5_ig_private_1.subnet.id }}"
+             - "{{ M5_ig_private_2.subnet.id }}"
+       register: rds_subnet
+     - name: Create RDS
+       rds:
+          command: create
+          instance_name: M5-image-gallery
+          db_engine: postgres
+          size: '20'
+          instance_type: db.t2.micro
+          subnet: "{{ rds_subnet.subnet_group.name }}"
+          username: postgres
+          password: postgrespassword
+          wait: yes
+     - name: Add security group to RDS
+       rds: 
+          command: modify
+          instance_name: M5-image-gallery
+          vpc_security_groups: "{{ M5_ig_postgres.group_id }}"
