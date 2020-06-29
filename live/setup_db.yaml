@@ -13,11 +13,16 @@
           instance_type: t3.nano
           image: "{{ ami_id }}"
           instance_tags:
-             Name: Module5 Bob
+             Name: Module5 database
              Module: 5
           wait: yes
+          user_data: "{{ lookup( 'file', 'ec2-prod-bootstrap.sh') | b64encode }}"
           assign_public_ip: yes
           vpc_subnet_id: "{{ M5_ig_public_1.subnet.id }}"
           exact_count: 1
           count_tag:
-             Name: Module5 Bob
+             Name: Module5 database
+          group_id: 
+             - "{{ M5_endpoint_tag.group_id }}"
+             - "{{ nginx_servers.group_id }}"
+             - "{{ M5_ig_postgres_tag.group_id }}"
