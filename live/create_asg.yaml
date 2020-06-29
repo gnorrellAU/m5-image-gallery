@@ -24,9 +24,15 @@
           image_id: "ami-09d95fab7fff3776c"
           key_name: auburndemo1
           instance_type: t3.micro
-          security_group_ids: "{{ M5_endpoint_tag.group_id }},{{ nginx_servers.group_id }},{{ M5_ig_postgres_tag.group_id }}"
           tags:
              Name: M5-ig-asg-server
+          network_interfaces:
+             - device_index: 0
+               associate_public_ip_address: yes
+               groups: 
+                  - "{{ M5_endpoint_tag.group_id }}"
+                  - "{{ nginx_servers.group_id }}"
+                  - "{{ M5_ig_postgres_tag.group_id }}"
           iam_instance_profile: 'image-gallery-server-role'
           user_data: "{{ lookup( 'file', 'ec2-prod-bootstrap.sh') | b64encode }}"
           state: present
