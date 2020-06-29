@@ -169,7 +169,7 @@
                group_name: "{{ M5_ig_postgres.group_name }}"
           state: present
        register: M5_ig_postgres_tag
-     - name: Fix postgres security group
+     - name: Fix postgres security group -- add tag
        ec2_group:
           name: M5-ig-postgres
           description: postgres security group
@@ -201,7 +201,7 @@
                group_name: "{{ M5_endpoint.group_name }}"
           state: present
        register: M5_endpoint_tag
-     - name: fix endpoint security group
+     - name: fix endpoint security group -- add tag
        ec2_group:
           name: M5-endpoint
           description: postgres security group
