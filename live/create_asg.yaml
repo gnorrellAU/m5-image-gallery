@@ -86,6 +86,7 @@
           min_size: 2
           max_size: 4
           desired_capacity: 2
+          target_group_arns: "{{ M5_ig_tg.target_group_arn }}"
           vpc_zone_identifier: "{{ M5_ig_public_1.subnet.id }},{{ M5_ig_public_2.subnet.id }}"
           health_check_type: EC2
           availability_zones: ['us-east-1a', 'us-east-1b']
