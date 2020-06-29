@@ -16,6 +16,8 @@
           unhealthy_threshold_count: 3
           healthy_threshold_count: 3
           health_check_interval: 30
+          health_check_path: /
+          successful_response_codes: "200-399"
           state: present
        register: M5_ig_tg
      - name: launch template

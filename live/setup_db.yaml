@@ -11,6 +11,7 @@
        ec2:
           key_name: auburndemo1
           instance_type: t3.nano
+          instance_profile_name: 'image-gallery-server-role'
           image: "{{ ami_id }}"
           instance_tags:
              Name: Module5 database
@@ -26,3 +27,4 @@
              - "{{ M5_endpoint_tag.group_id }}"
              - "{{ nginx_servers.group_id }}"
              - "{{ M5_ig_postgres_tag.group_id }}"
+             - "{{ dev.group_id }}"
