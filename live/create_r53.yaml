@@ -11,7 +11,7 @@
           type: A
           ttl: 300
           value: 
-             - "{{ eip1.allocation_id }}"
-             - "{{ eip2.allocation_id }}"
+             - "{{ eip1.public_ip }}"
+             - "{{ eip2.public_ip }}"
           overwrite: yes
           wait: yes
