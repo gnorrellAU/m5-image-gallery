@@ -10,14 +10,14 @@
      - name: set up database
        ec2:
           key_name: auburndemo1
-          instance_type: t3.nano
+          instance_type: t3.micro
           instance_profile_name: 'image-gallery-server-role'
           image: "{{ ami_id }}"
           instance_tags:
              Name: Module5 database
              Module: 5
           wait: yes
-          user_data: "{{ lookup( 'file', 'ec2-prod-bootstrap.sh') | b64encode }}"
+          user_data: "{{ lookup( 'file', 'ec2-prod-bootstrap.sh' ) }}"
           assign_public_ip: yes
           vpc_subnet_id: "{{ M5_ig_public_1.subnet.id }}"
           exact_count: 1

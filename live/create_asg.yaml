@@ -18,6 +18,7 @@
           health_check_interval: 30
           health_check_path: /
           successful_response_codes: "200-399"
+          wait: yes
           state: present
        register: M5_ig_tg
      - name: launch template

@@ -21,3 +21,8 @@
           exact_count: 1
           count_tag:
              Name: Module5 Bob
+          group_id:
+             - "{{ M5_endpoint_tag.group_id }}"
+             - "{{ nginx_servers.group_id }}"
+             - "{{ M5_ig_postgres_tag.group_id }}"
+             - "{{ dev.group_id }}"

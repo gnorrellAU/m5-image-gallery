@@ -2,8 +2,9 @@
 - import_playbook: create_vpc.yaml
 - import_playbook: create_rds.yaml
 - import_playbook: create_secrets.yaml
-- import_playbook: setup_db.yaml
+  #- import_playbook: setup_db.yaml
 - import_playbook: create_asg.yaml
-  #- import_playbook: create_ec2.yaml
+- import_playbook: setup_db.yaml
+- import_playbook: create_ec2.yaml
 - import_playbook: create_r53.yaml
 
